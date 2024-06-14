@@ -128,8 +128,6 @@ module Instrumented.Data.ByteString.Builder.Internal (
 
 import           Control.Arrow (second)
 
-import           Data.Semigroup (Semigroup(..))
-import           Data.List.NonEmpty (NonEmpty(..))
 
 import qualified Instrumented.Data.ByteString               as S
 import qualified Instrumented.Data.ByteString.Internal.Type as S
@@ -146,18 +144,22 @@ import           Foreign
 import           Foreign.ForeignPtr.Unsafe (unsafeForeignPtrToPtr)
 import           System.IO.Unsafe (unsafeDupablePerformIO)
 
+import Data.ByteString.Builder.Internal (
+    BufferRange(..)
+  , Buffer(..)
+  , Builder
+  , builder
+  , runBuilderWith
+  , BuildSignal
+  , fillWithBuildStep
+  , done
+  , bufferFull
+  , insertChunk
+  )
+
 ------------------------------------------------------------------------------
 -- Buffers
 ------------------------------------------------------------------------------
--- | A range of bytes in a buffer represented by the pointer to the first byte
--- of the range and the pointer to the first byte /after/ the range.
-data BufferRange = BufferRange {-# UNPACK #-} !(Ptr Word8)  -- First byte of range
-                               {-# UNPACK #-} !(Ptr Word8)  -- First byte /after/ range
-
--- | A 'Buffer' together with the 'BufferRange' of free bytes. The filled
--- space starts at offset 0 and ends at the first free byte.
-data Buffer = Buffer {-# UNPACK #-} !(ForeignPtr Word8)
-                     {-# UNPACK #-} !BufferRange
 
 
 -- | Combined size of the filled and free space in the buffer.
@@ -247,109 +249,16 @@ ciosToLazyByteString strategy k =
 -- async. exception.
 type BuildStep a = BufferRange -> IO (BuildSignal a)
 
--- | 'BuildSignal's abstract signals to the caller of a 'BuildStep'. There are
--- three signals: 'done', 'bufferFull', or 'insertChunks signals
-data BuildSignal a =
-    Done {-# UNPACK #-} !(Ptr Word8) a
-  | BufferFull
-      {-# UNPACK #-} !Int
-      {-# UNPACK #-} !(Ptr Word8)
-                     (BuildStep a)
-  | InsertChunk
-      {-# UNPACK #-} !(Ptr Word8)
-                     S.StrictByteString
-                     (BuildStep a)
-
--- | Signal that the current 'BuildStep' is done and has computed a value.
-{-# INLINE done #-}
-done :: Ptr Word8      -- ^ Next free byte in current 'BufferRange'
-     -> a              -- ^ Computed value
-     -> BuildSignal a
-done = Done
-
--- | Signal that the current buffer is full.
-{-# INLINE bufferFull #-}
-bufferFull :: Int
-           -- ^ Minimal size of next 'BufferRange'.
-           -> Ptr Word8
-           -- ^ Next free byte in current 'BufferRange'.
-           -> BuildStep a
-           -- ^ 'BuildStep' to run on the next 'BufferRange'. This 'BuildStep'
-           -- may assume that it is called with a 'BufferRange' of at least the
-           -- required minimal size; i.e., the caller of this 'BuildStep' must
-           -- guarantee this.
-           -> BuildSignal a
-bufferFull = BufferFull
-
-
--- | Signal that a 'S.StrictByteString' chunk should be inserted directly.
-{-# INLINE insertChunk #-}
-insertChunk :: Ptr Word8
-            -- ^ Next free byte in current 'BufferRange'
-            -> S.StrictByteString
-            -- ^ Chunk to insert.
-            -> BuildStep a
-            -- ^ 'BuildStep' to run on next 'BufferRange'
-            -> BuildSignal a
-insertChunk = InsertChunk
-
-
--- | Fill a 'BufferRange' using a 'BuildStep'.
-{-# INLINE fillWithBuildStep #-}
-fillWithBuildStep
-    :: BuildStep a
-    -- ^ Build step to use for filling the 'BufferRange'.
-    -> (Ptr Word8 -> a -> IO b)
-    -- ^ Handling the 'done' signal
-    -> (Ptr Word8 -> Int -> BuildStep a -> IO b)
-    -- ^ Handling the 'bufferFull' signal
-    -> (Ptr Word8 -> S.StrictByteString -> BuildStep a -> IO b)
-    -- ^ Handling the 'insertChunk' signal
-    -> BufferRange
-    -- ^ Buffer range to fill.
-    -> IO b
-    -- ^ Value computed while filling this 'BufferRange'.
-fillWithBuildStep step fDone fFull fChunk !br = do
-    signal <- step br
-    case signal of
-        Done op x                      -> fDone op x
-        BufferFull minSize op nextStep -> fFull op minSize nextStep
-        InsertChunk op bs nextStep     -> fChunk op bs nextStep
 
 
 ------------------------------------------------------------------------------
 -- The 'Builder' monoid
 ------------------------------------------------------------------------------
 
--- | 'Builder's denote sequences of bytes.
--- They are 'Monoid's where
---   'mempty' is the zero-length sequence and
---   'mappend' is concatenation, which runs in /O(1)/.
-newtype Builder = Builder (forall r. BuildStep r -> BuildStep r)
-
--- | Construct a 'Builder'. In contrast to 'BuildStep's, 'Builder's are
--- referentially transparent.
-{-# INLINE builder #-}
-builder :: (forall r. BuildStep r -> BuildStep r)
-        -- ^ A function that fills a 'BufferRange', calls the continuation with
-        -- the updated 'BufferRange' once its done, and signals its caller how
-        -- to proceed using 'done', 'bufferFull', or 'insertChunk'.
-        --
-        -- This function must be referentially transparent; i.e., calling it
-        -- multiple times with equally sized 'BufferRange's must result in the
-        -- same sequence of bytes being written. If you need mutable state,
-        -- then you must allocate it anew upon each call of this function.
-        -- Moreover, this function must call the continuation once its done.
-        -- Otherwise, concatenation of 'Builder's does not work. Finally, this
-        -- function must write to all bytes that it claims it has written.
-        -- Otherwise, the resulting 'Builder' is not guaranteed to be
-        -- referentially transparent and sensitive data might leak.
-        -> Builder
-builder = Builder
 
 -- | The final build step that returns the 'done' signal.
 finalBuildStep :: BuildStep ()
-finalBuildStep (BufferRange op _) = return $ Done op ()
+finalBuildStep (BufferRange op _) = return $ done op ()
 
 -- | Run a 'Builder' with the 'finalBuildStep'.
 {-# INLINE runBuilder #-}
@@ -358,18 +267,11 @@ runBuilder :: Builder      -- ^ 'Builder' to run
                            -- 'Builder' and signals 'done' upon completion.
 runBuilder b = runBuilderWith b finalBuildStep
 
--- | Run a 'Builder'.
-{-# INLINE runBuilderWith #-}
-runBuilderWith :: Builder      -- ^ 'Builder' to run
-               -> BuildStep a -- ^ Continuation 'BuildStep'
-               -> BuildStep a
-runBuilderWith (Builder b) = b
-
 -- | The 'Builder' denoting a zero-length sequence of bytes. This function is
 -- only exported for use in rewriting rules. Use 'mempty' otherwise.
 {-# INLINE[1] empty #-}
 empty :: Builder
-empty = Builder (\k br -> k br)
+empty = builder (\k br -> k br)
 -- This eta expansion (hopefully) allows GHC to worker-wrapper the
 -- 'BufferRange' in the 'empty' base case of loops (since
 -- worker-wrapper requires (TODO: verify this) that all paths match
@@ -382,36 +284,10 @@ empty = Builder (\k br -> k br)
 -- rules. Use 'mappend' otherwise.
 {-# INLINE[1] append #-}
 append :: Builder -> Builder -> Builder
-append (Builder b1) (Builder b2) = Builder $ b1 . b2
+--append (Builder b1) (Builder b2) = Builder $ b1 . b2
+append b1 b2 = builder $ runBuilderWith b1 . runBuilderWith b2
 
-stimesBuilder :: Integral t => t -> Builder -> Builder
-{-# INLINABLE stimesBuilder #-}
-stimesBuilder n b
-  | n >= 0 = go n
-  | otherwise = stimesNegativeErr
-  where go 0 = empty
-        go k = b `append` go (k - 1)
 
-stimesNegativeErr :: Builder
--- See Note [Float error calls out of INLINABLE things]
--- in Instrumented.Data.ByteString.Internal.Type
-stimesNegativeErr
-  = errorWithoutStackTrace "stimes @Builder: non-negative multiplier expected"
-
-instance Semigroup Builder where
-  {-# INLINE (<>) #-}
-  (<>) = append
-  sconcat (b:|bs) = b <> foldr mappend mempty bs
-  {-# INLINE stimes #-}
-  stimes = stimesBuilder
-
-instance Monoid Builder where
-  {-# INLINE mempty #-}
-  mempty = empty
-  {-# INLINE mappend #-}
-  mappend = (<>)
-  {-# INLINE mconcat #-}
-  mconcat = foldr mappend mempty
 
 -- | Flush the current buffer. This introduces a chunk boundary.
 {-# INLINE flush #-}
@@ -474,7 +350,7 @@ runPut :: Put a       -- ^ Put to run
        -> BuildStep a -- ^ 'BuildStep' that first writes the byte stream of
                       -- this 'Put' and then yields the computed value using
                       -- the 'done' signal.
-runPut (Put p) = p $ \x (BufferRange op _) -> return $ Done op x
+runPut (Put p) = p $ \x (BufferRange op _) -> return $ done op x
 
 instance Functor Put where
   fmap f p = Put $ \k -> unPut p (k . f)
@@ -515,12 +391,13 @@ instance Monad Put where
 -- | Run a 'Builder' as a side-effect of a @'Put' ()@ action.
 {-# INLINE[1] putBuilder #-}
 putBuilder :: Builder -> Put ()
-putBuilder (Builder b) = Put $ \k -> b (k ())
+--putBuilder (Builder b) = Put $ \k -> b (k ())
+putBuilder b = Put $ \k -> runBuilderWith b (k ())
 
 -- | Convert a @'Put' ()@ action to a 'Builder'.
 {-# INLINE fromPut #-}
 fromPut :: Put () -> Builder
-fromPut (Put p) = Builder $ \k -> p (const k)
+fromPut (Put p) = builder $ \k -> p (const k)
 
 -- We rewrite consecutive uses of 'putBuilder' such that the append of the
 -- involved 'Builder's is used. This can significantly improve performance,
