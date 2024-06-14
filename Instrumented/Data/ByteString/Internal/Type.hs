@@ -207,6 +207,8 @@ import GHC.ForeignPtr           (unsafeWithForeignPtr)
 
 
 import Data.ByteString.Internal (ByteString(..))
+import Control.Monad
+import GHC.Stack
 
 #if !MIN_VERSION_base(4,15,0)
 unsafeWithForeignPtr :: ForeignPtr a -> (Ptr a -> IO b) -> IO b
@@ -987,12 +989,28 @@ memset p w len = p <$ fillBytes p w (checkedCast len)
 
 {-# DEPRECATED memcpy "Use Foreign.Marshal.Utils.copyBytes instead" #-}
 -- | deprecated since @bytestring-0.11.5.0@
-memcpy :: Ptr Word8 -> Ptr Word8 -> Int -> IO ()
-memcpy = copyBytes
+memcpy :: HasCallStack => Ptr Word8 -> Ptr Word8 -> Int -> IO ()
+memcpy dst src s = do
+    checkOverlap dst src s
+    copyBytes dst src s
 
-memcpyFp :: ForeignPtr Word8 -> ForeignPtr Word8 -> Int -> IO ()
-memcpyFp fp fq s = unsafeWithForeignPtr fp $ \p ->
-                     unsafeWithForeignPtr fq $ \q -> copyBytes p q s
+memcpyFp :: HasCallStack => ForeignPtr Word8 -> ForeignPtr Word8 -> Int -> IO ()
+memcpyFp fp fq s = unsafeWithForeignPtr fp $ \dst ->
+                     unsafeWithForeignPtr fq $ \src -> do
+                       checkOverlap dst src s
+                       copyBytes dst src s
+
+checkOverlap :: HasCallStack => Ptr Word8 -> Ptr Word8 -> Int -> IO ()
+checkOverlap dst src s
+  | dst > src
+  = when (src `plusPtr` s > dst) $
+      error "memcpy overlap"
+
+  | otherwise
+  = when (dst `plusPtr` s > src) $
+      error "memcpy overlap"
+
+
 
 c_free_finalizer :: FunPtr (Ptr Word8 -> IO ())
 c_free_finalizer = finalizerFree
