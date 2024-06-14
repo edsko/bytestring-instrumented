@@ -208,7 +208,7 @@ storableToF = FP (sizeOf (undefined :: a)) (\x op -> poke (castPtr op) x)
 #else
 storableToF = FP (sizeOf (undefined :: a)) $ \x op ->
     if ptrToWordPtr op `mod` fromIntegral (alignment (undefined :: a)) == 0 then poke (castPtr op) x
-    else with x $ \tp -> copyBytes op (castPtr tp) (sizeOf (undefined :: a))
+    else with x $ \tp -> copyBytesCheck op (castPtr tp) (sizeOf (undefined :: a))
 #endif
 
 {-

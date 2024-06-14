@@ -1781,7 +1781,7 @@ sort (BS input l)
 useAsCString :: ByteString -> (CString -> IO a) -> IO a
 useAsCString (BS fp l) action =
   allocaBytes (l+1) $ \buf -> do
-    unsafeWithForeignPtr fp $ \p -> copyBytes buf p l
+    unsafeWithForeignPtr fp $ \p -> copyBytesCheck buf p l
     pokeByteOff buf l (0::Word8)
     action (castPtr buf)
 
@@ -1812,7 +1812,7 @@ packCString cstr = do
 -- Haskell heap.
 packCStringLen :: CStringLen -> IO ByteString
 packCStringLen (cstr, len) | len >= 0 = createFp len $ \fp ->
-    unsafeWithForeignPtr fp $ \p -> copyBytes p (castPtr cstr) len
+    unsafeWithForeignPtr fp $ \p -> copyBytesCheck p (castPtr cstr) len
 packCStringLen (_, len) =
     moduleErrorIO "packCStringLen" ("negative length: " ++ show len)
 

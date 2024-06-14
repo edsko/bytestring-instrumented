@@ -156,6 +156,7 @@ import Data.ByteString.Builder.Internal (
   , bufferFull
   , insertChunk
   )
+import Instrumented.Data.ByteString.Internal.Type (copyBytesCheck)
 
 ------------------------------------------------------------------------------
 -- Buffers
@@ -680,11 +681,11 @@ wrappedBytesCopyStep (BufferRange ip0 ipe) k =
   where
     go !ip (BufferRange op ope)
       | inpRemaining <= outRemaining = do
-          copyBytes op ip inpRemaining
+          copyBytesCheck op ip inpRemaining
           let !br' = BufferRange (op `plusPtr` inpRemaining) ope
           k br'
       | otherwise = do
-          copyBytes op ip outRemaining
+          copyBytesCheck op ip outRemaining
           let !ip' = ip `plusPtr` outRemaining
           return $ bufferFull 1 ope (go ip')
       where
@@ -729,7 +730,7 @@ byteStringCopyStep :: S.StrictByteString -> BuildStep a -> BuildStep a
 byteStringCopyStep (S.BS ifp isize) !k0 br0@(BufferRange op ope)
     -- Ensure that the common case is not recursive and therefore yields
     -- better code.
-    | op' <= ope = do copyBytes op ip isize
+    | op' <= ope = do copyBytesCheck op ip isize
                       touchForeignPtr ifp
                       k0 (BufferRange op' ope)
     | otherwise  = wrappedBytesCopyStep (BufferRange ip ipe) k br0

@@ -127,7 +127,11 @@ module Instrumented.Data.ByteString.Internal.Type (
 
         -- * Exported compatibility shim
         plusForeignPtr,
-        unsafeWithForeignPtr
+        unsafeWithForeignPtr,
+
+        -- * Instrumentation
+        copyBytesCheck,
+        checkOverlap
   ) where
 
 import Prelude hiding (concat, null)
@@ -990,17 +994,21 @@ memset p w len = p <$ fillBytes p w (checkedCast len)
 {-# DEPRECATED memcpy "Use Foreign.Marshal.Utils.copyBytes instead" #-}
 -- | deprecated since @bytestring-0.11.5.0@
 memcpy :: HasCallStack => Ptr Word8 -> Ptr Word8 -> Int -> IO ()
-memcpy dst src s = do
-    checkOverlap dst src s
-    copyBytes dst src s
+memcpy = copyBytesCheck
 
 memcpyFp :: HasCallStack => ForeignPtr Word8 -> ForeignPtr Word8 -> Int -> IO ()
 memcpyFp fp fq s = unsafeWithForeignPtr fp $ \dst ->
-                     unsafeWithForeignPtr fq $ \src -> do
-                       checkOverlap dst src s
-                       copyBytes dst src s
+                     unsafeWithForeignPtr fq $ \src ->
+                       copyBytesCheck dst src s
 
-checkOverlap :: HasCallStack => Ptr Word8 -> Ptr Word8 -> Int -> IO ()
+{-# NOINLINE copyBytesCheck #-}
+copyBytesCheck :: Ptr a -> Ptr a -> Int -> IO ()
+copyBytesCheck dst src s = do
+    checkOverlap dst src s
+    copyBytes dst src s
+
+{-# NOINLINE checkOverlap #-}
+checkOverlap :: HasCallStack => Ptr a -> Ptr a -> Int -> IO ()
 checkOverlap dst src s
   | dst > src
   = when (src `plusPtr` s > dst) $
