@@ -24,12 +24,12 @@ import System.IO
 import Foreign.C (CChar)
 import GHC.TypeLits (TypeError, ErrorMessage(..))
 
-import qualified Data.ByteString.Short as SB
-import qualified Data.ByteString      as P
-import qualified Data.ByteString.Lazy as L
+import qualified Instrumented.Data.ByteString.Short as SB
+import qualified Instrumented.Data.ByteString      as P
+import qualified Instrumented.Data.ByteString.Lazy as L
 
-import qualified Data.ByteString.Char8      as PC
-import qualified Data.ByteString.Lazy.Char8 as LC
+import qualified Instrumented.Data.ByteString.Char8      as PC
+import qualified Instrumented.Data.ByteString.Lazy.Char8 as LC
 
 ------------------------------------------------------------------------
 

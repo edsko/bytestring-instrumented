@@ -11,7 +11,7 @@
 -- Testing utilities for comparing
 -- for an example on how to use the functions provided here.
 --
-module Data.ByteString.Builder.Prim.TestUtils (
+module Instrumented.Data.ByteString.Builder.Prim.TestUtils (
 
   -- * Showing
     evalF
@@ -67,11 +67,11 @@ module Data.ByteString.Builder.Prim.TestUtils (
 
 import           Control.Arrow (first)
 
-import           Data.ByteString.Builder.Prim
+import           Instrumented.Data.ByteString.Builder.Prim
 
-import qualified Data.ByteString               as S
-import qualified Data.ByteString.Internal      as S
-import qualified Data.ByteString.Builder.Prim.Internal as I
+import qualified Instrumented.Data.ByteString               as S
+import qualified Instrumented.Data.ByteString.Internal      as S
+import qualified Instrumented.Data.ByteString.Builder.Prim.Internal as I
 
 import           Data.Bits (Bits(..))
 import           Data.Char (chr, ord)

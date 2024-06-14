@@ -31,29 +31,29 @@
 
 #if defined(BYTESTRING_SHORT)
 module Properties.ShortByteString (tests) where
-import qualified Data.ByteString.Short as B
-import qualified Data.ByteString.Short.Internal as B
+import qualified Instrumented.Data.ByteString.Short as B
+import qualified Instrumented.Data.ByteString.Short.Internal as B
 #define BYTESTRING_TYPE B.ShortByteString
 #elif !(defined BYTESTRING_LAZY)
 module Properties.ByteString (tests) where
 #define BYTESTRING_TYPE B.ByteString
-import qualified Data.ByteString as B
+import qualified Instrumented.Data.ByteString as B
 import GHC.IO.Encoding
 #else
 module Properties.ByteStringLazy (tests) where
 #define BYTESTRING_TYPE B.ByteString
-import qualified Data.ByteString.Lazy as B
+import qualified Instrumented.Data.ByteString.Lazy as B
 #endif
 
 #else
 
 #ifndef BYTESTRING_LAZY
 module Properties.ByteStringChar8 (tests) where
-import qualified Data.ByteString.Char8 as B
+import qualified Instrumented.Data.ByteString.Char8 as B
 #define BYTESTRING_TYPE B.ByteString
 #else
 module Properties.ByteStringLazyChar8 (tests) where
-import qualified Data.ByteString.Lazy.Char8 as B
+import qualified Instrumented.Data.ByteString.Lazy.Char8 as B
 #define BYTESTRING_TYPE B.ByteString
 #endif
 

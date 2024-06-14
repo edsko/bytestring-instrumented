@@ -13,7 +13,7 @@
 --
 -- Testing composition of 'Builders'.
 
-module Data.ByteString.Builder.Tests (tests) where
+module Instrumented.Data.ByteString.Builder.Tests (tests) where
 
 import           Prelude hiding (writeFile)
 
@@ -31,17 +31,17 @@ import           Data.Foldable
 import           Data.Semigroup (Semigroup(..))
 import           Data.Word
 
-import qualified Data.ByteString          as S
-import qualified Data.ByteString.Internal as S
-import qualified Data.ByteString.Lazy     as L
-import qualified Data.ByteString.Short    as Sh
+import qualified Instrumented.Data.ByteString          as S
+import qualified Instrumented.Data.ByteString.Internal as S
+import qualified Instrumented.Data.ByteString.Lazy     as L
+import qualified Instrumented.Data.ByteString.Short    as Sh
 
-import           Data.ByteString.Builder
-import           Data.ByteString.Builder.Extra
-import           Data.ByteString.Builder.Internal (Put, putBuilder, fromPut)
-import qualified Data.ByteString.Builder.Internal   as BI
-import qualified Data.ByteString.Builder.Prim       as BP
-import           Data.ByteString.Builder.Prim.TestUtils
+import           Instrumented.Data.ByteString.Builder
+import           Instrumented.Data.ByteString.Builder.Extra
+import           Instrumented.Data.ByteString.Builder.Internal (Put, putBuilder, fromPut)
+import qualified Instrumented.Data.ByteString.Builder.Internal   as BI
+import qualified Instrumented.Data.ByteString.Builder.Prim       as BP
+import           Instrumented.Data.ByteString.Builder.Prim.TestUtils
 
 import           Control.Exception (evaluate)
 import           System.IO (openTempFile, hPutStr, hClose, hSetBinaryMode, hSetEncoding, utf8, hSetNewlineMode, noNewlineTranslation)

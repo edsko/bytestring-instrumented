@@ -44,20 +44,20 @@ import Data.String
 import System.Environment
 import System.IO
 
-import Data.ByteString.Lazy (ByteString(..), pack , unpack)
-import qualified Data.ByteString.Lazy as L
-import Data.ByteString.Lazy.Internal (ByteString(..))
+import Instrumented.Data.ByteString.Lazy (ByteString(..), pack , unpack)
+import qualified Instrumented.Data.ByteString.Lazy as L
+import Instrumented.Data.ByteString.Lazy.Internal (ByteString(..))
 
-import qualified Data.ByteString            as P
-import qualified Data.ByteString.Internal   as P
-import qualified Data.ByteString.Unsafe     as P
-import qualified Data.ByteString.Char8      as C
-import qualified Data.ByteString.Short      as Short
+import qualified Instrumented.Data.ByteString            as P
+import qualified Instrumented.Data.ByteString.Internal   as P
+import qualified Instrumented.Data.ByteString.Unsafe     as P
+import qualified Instrumented.Data.ByteString.Char8      as C
+import qualified Instrumented.Data.ByteString.Short      as Short
 
-import qualified Data.ByteString.Lazy.Char8 as LC
-import qualified Data.ByteString.Lazy.Char8 as D
+import qualified Instrumented.Data.ByteString.Lazy.Char8 as LC
+import qualified Instrumented.Data.ByteString.Lazy.Char8 as D
 
-import qualified Data.ByteString.Lazy.Internal as L
+import qualified Instrumented.Data.ByteString.Lazy.Internal as L
 
 import QuickCheckUtils
 import Test.Tasty

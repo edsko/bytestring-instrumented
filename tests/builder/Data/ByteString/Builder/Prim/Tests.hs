@@ -10,14 +10,14 @@
 --
 -- Testing all encodings provided by this library.
 
-module Data.ByteString.Builder.Prim.Tests (tests) where
+module Instrumented.Data.ByteString.Builder.Prim.Tests (tests) where
 
 import           Data.Char  (ord)
-import qualified Data.ByteString.Lazy                  as L
-import qualified Data.ByteString.Lazy.Char8            as LC
-import           Data.ByteString.Builder
-import qualified Data.ByteString.Builder.Prim          as BP
-import           Data.ByteString.Builder.Prim.TestUtils
+import qualified Instrumented.Data.ByteString.Lazy                  as L
+import qualified Instrumented.Data.ByteString.Lazy.Char8            as LC
+import           Instrumented.Data.ByteString.Builder
+import qualified Instrumented.Data.ByteString.Builder.Prim          as BP
+import           Instrumented.Data.ByteString.Builder.Prim.TestUtils
 
 import           Test.Tasty
 import           Test.Tasty.QuickCheck

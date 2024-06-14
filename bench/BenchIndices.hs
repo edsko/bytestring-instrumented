@@ -18,8 +18,8 @@ import           Test.Tasty.Bench
 import           Prelude                               hiding (words, head, tail)
 import           Data.Word                             (Word8)
 
-import qualified Data.ByteString                       as S
-import qualified Data.ByteString.Unsafe                as S
+import qualified Instrumented.Data.ByteString                       as S
+import qualified Instrumented.Data.ByteString.Unsafe                as S
 
 
 ------------------------------------------------------------------------------

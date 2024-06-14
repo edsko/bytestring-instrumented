@@ -1,7 +1,7 @@
 module LazyHClose (testSuite) where
 
 import Control.Monad (void, forM_)
-import Data.ByteString.Internal (toForeignPtr)
+import Instrumented.Data.ByteString.Internal (toForeignPtr)
 import Foreign.C.String (withCString)
 import Foreign.ForeignPtr (finalizeForeignPtr)
 import System.IO (openFile, openTempFile, hClose, hPutStrLn, IOMode(..))
@@ -9,10 +9,10 @@ import System.Posix.Internals (c_unlink)
 import Test.Tasty (TestTree, testGroup, withResource)
 import Test.Tasty.QuickCheck (testProperty, ioProperty)
 
-import qualified Data.ByteString            as S
-import qualified Data.ByteString.Char8      as S8
-import qualified Data.ByteString.Lazy       as L
-import qualified Data.ByteString.Lazy.Char8 as L8
+import qualified Instrumented.Data.ByteString            as S
+import qualified Instrumented.Data.ByteString.Char8      as S8
+import qualified Instrumented.Data.ByteString.Lazy       as L
+import qualified Instrumented.Data.ByteString.Lazy.Char8 as L8
 
 n :: Int
 n = 1000

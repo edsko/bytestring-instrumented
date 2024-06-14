@@ -6,7 +6,7 @@
 -- Stability   : experimental
 -- Portability : tested on GHC only
 --
--- Running example for documentation of Data.ByteString.Builder
+-- Running example for documentation of Instrumented.Data.ByteString.Builder
 --
 
 {-# LANGUAGE CPP #-}
@@ -15,7 +15,7 @@
 module BenchCSV (benchCSV) where
 
 --  **************************************************************************
--- CamHac 2011: An introduction to Data.ByteString.Builder
+-- CamHac 2011: An introduction to Instrumented.Data.ByteString.Builder
 --  **************************************************************************
 
 
@@ -42,7 +42,7 @@ module BenchCSV (benchCSV) where
 
 
 
-{- Data.ByteString.Builder
+{- Instrumented.Data.ByteString.Builder
  ------------------------------
 
  A solution to the "Encoding Problem"  (based on the code of blaze-builder).
@@ -116,11 +116,11 @@ import Data.Monoid
 
 import Test.Tasty.Bench
 
-import qualified Data.ByteString         as S
-import qualified Data.ByteString.Lazy    as L
-import           Data.ByteString.Builder as B
-import           Data.ByteString.Builder.Prim.Internal ( (>*<), (>$<) )
-import qualified Data.ByteString.Builder.Prim         as E
+import qualified Instrumented.Data.ByteString         as S
+import qualified Instrumented.Data.ByteString.Lazy    as L
+import           Instrumented.Data.ByteString.Builder as B
+import           Instrumented.Data.ByteString.Builder.Prim.Internal ( (>*<), (>$<) )
+import qualified Instrumented.Data.ByteString.Builder.Prim         as E
 
 -- bytestring benchmarks cannot depend on text because of a circular dependency.
 -- Anyways these comparisons are of historical interest only, so disabled for now.
@@ -213,7 +213,7 @@ benchStringUtf8 = bench "utf8 + renderTable maxiTable" $
 
 -- As a reminder:
 --
--- import  Data.ByteString.Builder       as B
+-- import  Instrumented.Data.ByteString.Builder       as B
 
 renderStringB :: String -> Builder
 renderStringB cs = B.charUtf8 '"' <> foldMap escape cs <> B.charUtf8 '"'

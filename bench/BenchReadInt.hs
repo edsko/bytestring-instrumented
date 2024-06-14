@@ -17,9 +17,9 @@
 
 module BenchReadInt (benchReadInt) where
 
-import qualified Data.ByteString.Builder               as B
-import qualified Data.ByteString.Char8                 as S
-import qualified Data.ByteString.Lazy.Char8            as L
+import qualified Instrumented.Data.ByteString.Builder               as B
+import qualified Instrumented.Data.ByteString.Char8                 as S
+import qualified Instrumented.Data.ByteString.Lazy.Char8            as L
 import Test.Tasty.Bench
 import Data.Int
 import Data.Word

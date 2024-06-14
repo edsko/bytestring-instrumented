@@ -17,16 +17,16 @@ import Data.Monoid
 import Data.Foldable (foldMap)
 import Test.Tasty.Bench
 
-import qualified Data.ByteString                  as S
-import qualified Data.ByteString.Lazy             as L
+import qualified Instrumented.Data.ByteString                  as S
+import qualified Instrumented.Data.ByteString.Lazy             as L
 
-import           Data.ByteString.Builder
-import           Data.ByteString.Builder.Extra
-import           Data.ByteString.Builder.Prim
+import           Instrumented.Data.ByteString.Builder
+import           Instrumented.Data.ByteString.Builder.Extra
+import           Instrumented.Data.ByteString.Builder.Prim
                    ( FixedPrim, BoundedPrim, (>$<), (>*<) )
-import qualified Data.ByteString.Builder.Prim          as P
-import qualified Data.ByteString.Builder.Internal      as I
-import qualified Data.ByteString.Builder.Prim.Internal as I
+import qualified Instrumented.Data.ByteString.Builder.Prim          as P
+import qualified Instrumented.Data.ByteString.Builder.Internal      as I
+import qualified Instrumented.Data.ByteString.Builder.Prim.Internal as I
 
 import Foreign
 
@@ -73,7 +73,7 @@ benchBInts name = benchB name intData
 
 benchBoundsCheckFusion :: Benchmark
 benchBoundsCheckFusion = bgroup "BoundsCheckFusion"
-    [ bgroup "Data.ByteString.Builder"
+    [ bgroup "Instrumented.Data.ByteString.Builder"
         [ benchBInts "foldMap (left-assoc)" $
             foldMap (\x -> (stringUtf8 "s" `mappend` intHost x) `mappend` intHost x)
 

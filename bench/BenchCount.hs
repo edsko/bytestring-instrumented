@@ -9,7 +9,7 @@
 module BenchCount (benchCount) where
 
 import           Test.Tasty.Bench
-import qualified Data.ByteString.Char8 as B
+import qualified Instrumented.Data.ByteString.Char8 as B
 
 benchCount :: Benchmark
 benchCount = bgroup "Count"

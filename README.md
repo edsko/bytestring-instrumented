@@ -2,15 +2,15 @@
 
 [![Build Status](https://github.com/haskell/bytestring/workflows/ci/badge.svg)](https://github.com/haskell/bytestring/actions?query=workflow%3Aci) [![Hackage](http://img.shields.io/hackage/v/bytestring.svg)](https://hackage.haskell.org/package/bytestring) [![Stackage LTS](http://stackage.org/package/bytestring/badge/lts)](http://stackage.org/lts/package/bytestring) [![Stackage Nightly](http://stackage.org/package/bytestring/badge/nightly)](http://stackage.org/nightly/package/bytestring)
 
-This library provides the `Data.ByteString` module -- strict and lazy
+This library provides the `Instrumented.Data.ByteString` module -- strict and lazy
 byte arrays manipulable as strings -- providing very time/space-efficient
 string and IO operations.
 
 For very large data requirements, or constraints on heap size,
-`Data.ByteString.Lazy` is provided, a lazy list of bytestring chunks.
+`Instrumented.Data.ByteString.Lazy` is provided, a lazy list of bytestring chunks.
 Efficient processing of multi-gigabyte data can be achieved this way.
 
-The library also provides `Data.ByteString.Builder` for efficient construction
+The library also provides `Instrumented.Data.ByteString.Builder` for efficient construction
 of `ByteString` values from smaller pieces during binary serialization.
 
 Requirements:

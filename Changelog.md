@@ -10,7 +10,7 @@
   * [Several alignment-related bug fixes](https://github.com/haskell/bytestring/pull/587)
   * [Fix a bug in `isValidUtf8`](https://github.com/haskell/bytestring/pull/621)
   * [`sconcat @ShortByteString` is no longer terribly inefficient](https://github.com/haskell/bytestring/pull/650)
-  * [Fix the type on the foreign import used for `Data.ByteString.Short.elemIndex`](https://github.com/haskell/bytestring/pull/661)
+  * [Fix the type on the foreign import used for `Instrumented.Data.ByteString.Short.elemIndex`](https://github.com/haskell/bytestring/pull/661)
   * [Ensure that the result of `fromShort` is protected by `mkDeferredByteString`](https://github.com/haskell/bytestring/pull/662)
 * Behavior changes:
   * [The `Data.Data.Data` instances for `StrictByteString` and `LazyByteString` have been changed:](https://github.com/haskell/bytestring/pull/614)
@@ -20,22 +20,22 @@
   * [A derived `instance Generic ShortByteString` has been added.](https://github.com/haskell/bytestring/pull/662)
   * [`sconcat @Builder` is now lazy in the tail of its input](https://github.com/haskell/bytestring/pull/650)
 * Deprecations:
-  * [`Data.ByteString.Builder.Prim.Internal.storableToF`](https://github.com/haskell/bytestring/pull/649)
+  * [`Instrumented.Data.ByteString.Builder.Prim.Internal.storableToF`](https://github.com/haskell/bytestring/pull/649)
 * Performance improvements:
   * Various raw-binary `Builder` primitives like `intHost` or `word32BE` are much less inefficient on architectures not known to support unaligned writes. ([1](https://github.com/haskell/bytestring/pull/587), [2](https://github.com/haskell/bytestring/pull/645))
   * [Hexadecimal encoding suffers one indirection fewer](https://github.com/haskell/bytestring/pull/624)
-  * [`Data.ByteString.Lazy.takeEnd` is somewhat faster](https://github.com/haskell/bytestring/pull/629)
-  * [`Data.ByteString.Lazy.dropEnd` is much faster](https://github.com/haskell/bytestring/pull/629)
+  * [`Instrumented.Data.ByteString.Lazy.takeEnd` is somewhat faster](https://github.com/haskell/bytestring/pull/629)
+  * [`Instrumented.Data.ByteString.Lazy.dropEnd` is much faster](https://github.com/haskell/bytestring/pull/629)
 * Miscellaneous:
   * Various documentation improvements ([1](https://github.com/haskell/bytestring/pull/628), [2](https://github.com/haskell/bytestring/pull/609), [3](https://github.com/haskell/bytestring/pull/612), [4](https://github.com/haskell/bytestring/pull/623), [5](https://github.com/haskell/bytestring/pull/654))
-  * [Eta-expand `Data.ByteString.Builder.Internal.empty`](https://github.com/haskell/bytestring/pull/616)
+  * [Eta-expand `Instrumented.Data.ByteString.Builder.Internal.empty`](https://github.com/haskell/bytestring/pull/616)
     * This can variously help or hurt performance; it undoes the performance changes caused by [CLC proposal 132](https://github.com/haskell/core-libraries-committee/issues/132) with ghc-9.8 and restores the baseline performance seen with older GHCs.
 <!--
 * Internal stuff:
   * [Delete cabal.project](https://github.com/haskell/bytestring/pull/613)
   * Remove some non-exposed data declarations from internal modules:
-    * [`Data.ByteString.Short.Internal.BA`](https://github.com/haskell/bytestring/pull/615)
-    * [`Data.ByteString.Short.Internal.MBA`](https://github.com/haskell/bytestring/pull/617)
+    * [`Instrumented.Data.ByteString.Short.Internal.BA`](https://github.com/haskell/bytestring/pull/615)
+    * [`Instrumented.Data.ByteString.Short.Internal.MBA`](https://github.com/haskell/bytestring/pull/617)
   * Various CI tweaks ([1](https://github.com/haskell/bytestring/pull/626), [2](https://github.com/haskell/bytestring/pull/651))
   * [Use `NonEmpty` to prune dead code in `integerDec`](https://github.com/haskell/bytestring/pull/655)
     * This might have a performance impact due to result unboxing (CPR).
@@ -72,18 +72,18 @@
     * Previously, it would ignore the first argument entirely.
 * Bug fixes:
   * Size-related calculations are more resistant to `Int` overflow in the following places:
-    * [`Data.ByteString.intercalate`](https://github.com/haskell/bytestring/pull/468)
+    * [`Instrumented.Data.ByteString.intercalate`](https://github.com/haskell/bytestring/pull/468)
     * [`stimes @StrictByteString`](https://github.com/haskell/bytestring/pull/443)
-    * [`Data.ByteString.Short.concat`](https://github.com/haskell/bytestring/pull/443)
-    * [`Data.ByteString.Short.append`](https://github.com/haskell/bytestring/pull/443)
-    * [`Data.ByteString.Short.snoc`](https://github.com/haskell/bytestring/pull/599)
-    * [`Data.ByteString.Short.cons`](https://github.com/haskell/bytestring/pull/599)
+    * [`Instrumented.Data.ByteString.Short.concat`](https://github.com/haskell/bytestring/pull/443)
+    * [`Instrumented.Data.ByteString.Short.append`](https://github.com/haskell/bytestring/pull/443)
+    * [`Instrumented.Data.ByteString.Short.snoc`](https://github.com/haskell/bytestring/pull/599)
+    * [`Instrumented.Data.ByteString.Short.cons`](https://github.com/haskell/bytestring/pull/599)
 * API additions:
   * [New sized and/or unsigned variants of `readInt` and `readInteger`](https://github.com/haskell/bytestring/pull/438)
-  * [`Data.ByteString.Internal` now provides `SizeOverflowException`, `overflowError`, and `checkedMultiply`](https://github.com/haskell/bytestring/pull/443)
+  * [`Instrumented.Data.ByteString.Internal` now provides `SizeOverflowException`, `overflowError`, and `checkedMultiply`](https://github.com/haskell/bytestring/pull/443)
 * Deprecations:
-  * `Data.ByteString.getLine`: prefer `Data.ByteString.Char8.getLine`
-  * `Data.ByteString.hGetLine`: prefer `Data.ByteString.Char8.hGetLine`
+  * `Instrumented.Data.ByteString.getLine`: prefer `Instrumented.Data.ByteString.Char8.getLine`
+  * `Instrumented.Data.ByteString.hGetLine`: prefer `Instrumented.Data.ByteString.Char8.hGetLine`
 
 
 [0.12.0.0]: https://github.com/haskell/bytestring/compare/0.11.5.0...0.12.0.0
@@ -113,12 +113,12 @@
 
 * Bug fixes:
   * [Fix multiple bugs with ASCII blocks in the SIMD implementations for `isValidUtf8`](https://github.com/haskell/bytestring/pull/582)
-  * [Prevent unsound optimizations with the `Data.ByteString.Internal.create*` family of functions](https://github.com/haskell/bytestring/pull/580)
+  * [Prevent unsound optimizations with the `Instrumented.Data.ByteString.Internal.create*` family of functions](https://github.com/haskell/bytestring/pull/580)
 * API additions:
-  * [`Data.ByteString.Internal` now provides `mkDeferredByteString` and `deferForeignPtrAvailability`](https://github.com/haskell/bytestring/pull/580)
+  * [`Instrumented.Data.ByteString.Internal` now provides `mkDeferredByteString` and `deferForeignPtrAvailability`](https://github.com/haskell/bytestring/pull/580)
 * Deprecations:
-  * `Data.ByteString.Internal.memcpy`: prefer `Foreign.Marshal.Utils.copyBytes`
-  * `Data.ByteString.Internal.memset`: prefer `Foreign.Marshal.Utils.fillBytes`
+  * `Instrumented.Data.ByteString.Internal.memcpy`: prefer `Foreign.Marshal.Utils.copyBytes`
+  * `Instrumented.Data.ByteString.Internal.memset`: prefer `Foreign.Marshal.Utils.fillBytes`
 * Performance improvements:
   * [Many functions returning `StrictByteString` can now return their results unboxed](https://github.com/haskell/bytestring/pull/580)
   * [Dead branches removed from `Lazy.toStrict`](https://github.com/haskell/bytestring/pull/590)
@@ -142,7 +142,7 @@
   * [Make `Builder` literals demand a sane amount of memory at chunk boundaries](https://github.com/haskell/bytestring/pull/538)
 * API additions and behavior changes:
   * [Export `unsafeIndex` for `ShortByteString` which had been accidentally removed in v0.11.3.0](https://github.com/haskell/bytestring/pull/532)
-  * [Make `Data.ByteString.Lazy.Char8.lines` less strict](https://github.com/haskell/bytestring/pull/562)
+  * [Make `Instrumented.Data.ByteString.Lazy.Char8.lines` less strict](https://github.com/haskell/bytestring/pull/562)
   * [Add `NonEmpty` variants of `inits` and `tails`](https://github.com/haskell/bytestring/pull/557)
 * Performance improvements:
   * [Speed up `unpack` and folds for `ShortByteString`](https://github.com/haskell/bytestring/pull/526)
@@ -150,7 +150,7 @@
   * [Work around upstream `keepAlive#` performance regressions](https://github.com/haskell/bytestring/pull/536)
   * [Improve performance of `uncons` for `LazyByteString`](https://github.com/haskell/bytestring/pull/559)
   * [Simplify `useAsCString`](https://github.com/haskell/bytestring/pull/516)
-  * [Remove redundant comparisons in `Data.ByteString.Short.splitAt`](https://github.com/haskell/bytestring/pull/528)
+  * [Remove redundant comparisons in `Instrumented.Data.ByteString.Short.splitAt`](https://github.com/haskell/bytestring/pull/528)
 * Miscellaneous:
   * [Document possible interleaving of `hPutStrLn` and friends](https://github.com/haskell/bytestring/pull/518)
   * [Documentation tweaks](https://github.com/haskell/bytestring/pull/523)
@@ -174,11 +174,11 @@
 
 [0.11.3.0] — February 2022
 
-Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.ByteString.Short.Internal` in this release. This was corrected in 0.11.4.0.
+Erratum: `unsafeIndex` was accidentally removed from the export list of `Instrumented.Data.ByteString.Short.Internal` in this release. This was corrected in 0.11.4.0.
 
 * [Enhance `ShortByteString` API](https://github.com/haskell/bytestring/pull/471)
-  - Add `all`, `any`, `append`, `break`, `breakEnd`, `breakSubstring`, `concat`, `cons`, `count`, `drop`, `dropEnd`, `dropWhile`, `dropWhileEnd`, `elem`, `elemIndex`, `elemIndices`, `filter`, `find`, `findIndex`, `findIndices`, `foldl'`, `foldl`, `foldl1'`, `foldl1`, `foldr'`, `foldr`, `foldr1'`, `foldr1`, `head`, `init`, `intercalate`, `isInfixOf`, `isPrefixOf`, `isSuffixOf`, `last`, `map`, `partition`, `replicate`, `reverse`, `singleton`, `snoc`, `span`, `spanEnd`, `split`, `splitAt`, `splitWith`, `stripPrefix`, `stripSuffix`, `tail`, `take`, `takeEnd`, `takeWhile`, `takeWhileEnd`, `uncons`, `unfoldr`, `unfoldrN`, `unsnoc` to `Data.ByteString.Short`.
-* [Add `Data.ByteString.Short.isValidUtf8`](https://github.com/haskell/bytestring/pull/450)
+  - Add `all`, `any`, `append`, `break`, `breakEnd`, `breakSubstring`, `concat`, `cons`, `count`, `drop`, `dropEnd`, `dropWhile`, `dropWhileEnd`, `elem`, `elemIndex`, `elemIndices`, `filter`, `find`, `findIndex`, `findIndices`, `foldl'`, `foldl`, `foldl1'`, `foldl1`, `foldr'`, `foldr`, `foldr1'`, `foldr1`, `head`, `init`, `intercalate`, `isInfixOf`, `isPrefixOf`, `isSuffixOf`, `last`, `map`, `partition`, `replicate`, `reverse`, `singleton`, `snoc`, `span`, `spanEnd`, `split`, `splitAt`, `splitWith`, `stripPrefix`, `stripSuffix`, `tail`, `take`, `takeEnd`, `takeWhile`, `takeWhileEnd`, `uncons`, `unfoldr`, `unfoldrN`, `unsnoc` to `Instrumented.Data.ByteString.Short`.
+* [Add `Instrumented.Data.ByteString.Short.isValidUtf8`](https://github.com/haskell/bytestring/pull/450)
 * [Use safe `isValidUtf8` for large inputs](https://github.com/haskell/bytestring/pull/470)
 * [Make `unlines` lazier](https://github.com/haskell/bytestring/pull/477)
 * [Improve performance of `unlines`](https://github.com/haskell/bytestring/pull/479)
@@ -189,15 +189,15 @@ Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.By
 
 [0.11.2.0] — December 2021
 
-* [Add `Data.ByteString.isValidUtf8`](https://github.com/haskell/bytestring/pull/423)
+* [Add `Instrumented.Data.ByteString.isValidUtf8`](https://github.com/haskell/bytestring/pull/423)
 * [Speed up `floatDec` and `doubleDec` using the Ryu algorithm](https://github.com/haskell/bytestring/pull/365)
-  - `Data.ByteString.Builder.RealFloat` offers additional custom formatters
+  - `Instrumented.Data.ByteString.Builder.RealFloat` offers additional custom formatters
     for floating point numbers.
 * [Add `StrictByteString` and `LazyByteString` type aliases](https://github.com/haskell/bytestring/pull/378)
-* [Add `foldr'`, `foldr1'`, `scanl1`, `scanr`, `scanr1` to `Data.ByteString.Lazy{,.Char8}`](https://github.com/haskell/bytestring/pull/364)
-* [Add `takeEnd`, `dropEnd`, `takeWhileEnd`, `dropWhileEnd`, `spanEnd`, `breakEnd` to `Data.ByteString.Lazy{,.Char8}`](https://github.com/haskell/bytestring/pull/395)
-* [Add `Data.ByteString.Builder.writeFile` to write `Builder` to file directly](https://github.com/haskell/bytestring/pull/408)
-* [Add `Data.ByteString.{from,to}FilePath` for encoding-aware conversions](https://github.com/haskell/bytestring/pull/403)
+* [Add `foldr'`, `foldr1'`, `scanl1`, `scanr`, `scanr1` to `Instrumented.Data.ByteString.Lazy{,.Char8}`](https://github.com/haskell/bytestring/pull/364)
+* [Add `takeEnd`, `dropEnd`, `takeWhileEnd`, `dropWhileEnd`, `spanEnd`, `breakEnd` to `Instrumented.Data.ByteString.Lazy{,.Char8}`](https://github.com/haskell/bytestring/pull/395)
+* [Add `Instrumented.Data.ByteString.Builder.writeFile` to write `Builder` to file directly](https://github.com/haskell/bytestring/pull/408)
+* [Add `Instrumented.Data.ByteString.{from,to}FilePath` for encoding-aware conversions](https://github.com/haskell/bytestring/pull/403)
 * [Add `Lift` instances for all flavors of `ByteString`](https://github.com/haskell/bytestring/pull/392)
 * [Add `HasCallStack` for partial functions](https://github.com/haskell/bytestring/pull/440)
 * [Define `foldl`, `foldl'`, `foldr`, `foldr'`, `mapAccumL`, `mapAccumR`, `scanl`, `scanr` and `filter` with one argument less to allow more inlining](https://github.com/haskell/bytestring/pull/345)
@@ -212,8 +212,8 @@ Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.By
 
 [0.11.1.0] — February 2021
 
-* [Add `Data.ByteString.Char8.findIndexEnd` and `Data.ByteString.Lazy.Char8.{elemIndexEnd,findIndexEnd,unzip}`](https://github.com/haskell/bytestring/pull/342)
-* [Expose `ShortByteString` constructor from `Data.ByteString.Short`](https://github.com/haskell/bytestring/pull/313)
+* [Add `Instrumented.Data.ByteString.Char8.findIndexEnd` and `Instrumented.Data.ByteString.Lazy.Char8.{elemIndexEnd,findIndexEnd,unzip}`](https://github.com/haskell/bytestring/pull/342)
+* [Expose `ShortByteString` constructor from `Instrumented.Data.ByteString.Short`](https://github.com/haskell/bytestring/pull/313)
 * [Add `compareLength` function, which is lazier than comparison of lengths](https://github.com/haskell/bytestring/pull/300)
 * [Add strict `takeEnd` and `dropEnd`](https://github.com/haskell/bytestring/pull/290)
 * [Expose `packZipWith` to zip two `ByteString`](https://github.com/haskell/bytestring/pull/295)
@@ -240,7 +240,7 @@ Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.By
  * [Fill `ForeignPtrContents` of `nullForeignPtr` with `FinalPtr` instead of a bottom](https://github.com/haskell/bytestring/pull/284)
  * [Remove deprecated functions `findSubstring` and `findSubstrings`](https://github.com/haskell/bytestring/pull/181)
  * [Speed up sorting of short strings](https://github.com/haskell/bytestring/pull/267)
- * [Improve handling of literal strings in `Data.ByteString.Builder`](https://github.com/haskell/bytestring/pull/132)
+ * [Improve handling of literal strings in `Instrumented.Data.ByteString.Builder`](https://github.com/haskell/bytestring/pull/132)
  * [Compute length at compile time for literal strings](https://github.com/haskell/bytestring/pull/191)
    * This improves optimization opportunities for functions that scrutinize the length of a `ByteString`.
  * [Add `indexMaybe` and synonym `(!?)` for indexing that returns `Maybe`](https://github.com/haskell/bytestring/pull/261)
@@ -249,12 +249,12 @@ Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.By
  * [Add rewrite rules for `findInd{ex,ices} (== x)`](https://github.com/haskell/bytestring/pull/270)
  * [Improve folds to pass fewer arguments on each recursive invocation](https://github.com/haskell/bytestring/pull/273)
  * [Improve performance of `findIndices`](https://github.com/haskell/bytestring/pull/270)
- * [Re-export `Data.ByteString.Lazy.{from,to}Strict` from `Data.ByteString`](https://github.com/haskell/bytestring/pull/281)
+ * [Re-export `Instrumented.Data.ByteString.Lazy.{from,to}Strict` from `Instrumented.Data.ByteString`](https://github.com/haskell/bytestring/pull/281)
  * [Remove deprecated modules and functions](https://github.com/haskell/bytestring/pull/286)
-   * Use `Data.ByteString.Builder{,.Extra}` instead of `Data.ByteString.Lazy.Builder{,.ASCII,.Extras}`.
-   * Use `Data.ByteString.Char8.{,h}putStrLn` instead of `Data.ByteString.{,h}putStrLn` and `Data.ByteString.Lazy.Char8.putStrLn` instead of `Data.ByteString.Char8.putStrLn`.
-   * Use `Data.ByteString.break (== x)` instead of `Data.ByteString.breakByte x`.
-   * Use `Data.ByteString.Internal.accursedUnutterablePerformIO` instead of `Data.ByteString.Internal.inlinePerformIO`.
+   * Use `Instrumented.Data.ByteString.Builder{,.Extra}` instead of `Instrumented.Data.ByteString.Lazy.Builder{,.ASCII,.Extras}`.
+   * Use `Instrumented.Data.ByteString.Char8.{,h}putStrLn` instead of `Instrumented.Data.ByteString.{,h}putStrLn` and `Instrumented.Data.ByteString.Lazy.Char8.putStrLn` instead of `Instrumented.Data.ByteString.Char8.putStrLn`.
+   * Use `Instrumented.Data.ByteString.break (== x)` instead of `Instrumented.Data.ByteString.breakByte x`.
+   * Use `Instrumented.Data.ByteString.Internal.accursedUnutterablePerformIO` instead of `Instrumented.Data.ByteString.Internal.inlinePerformIO`.
 
 [0.11.0.0]: https://github.com/haskell/bytestring/compare/0.10.12.0...0.11.0.0
 
@@ -263,14 +263,14 @@ Erratum: `unsafeIndex` was accidentally removed from the export list of `Data.By
  * **Note:** There are several breaking changes planned to be included in v0.11.
    Please ensure that your packages have appropriate upper bounds on bytestring,
    in order to minimize avoidable breakage.
- * [Add `takeWhileEnd` and `dropWhileEnd` to `Data.ByteString` and `Data.ByteString.Char8`, and add `dropSpace` and `strip` to `Data.ByteString.Char8`](https://github.com/haskell/bytestring/pull/121)
- * [Add `findIndexEnd` to `Data.ByteString` and `Data.ByteString.Lazy`](https://github.com/haskell/bytestring/pull/155)
- * [Add `partition` to `Data.ByteString.Char8` and `Data.ByteString.Lazy.Char8`](https://github.com/haskell/bytestring/pull/251)
+ * [Add `takeWhileEnd` and `dropWhileEnd` to `Instrumented.Data.ByteString` and `Instrumented.Data.ByteString.Char8`, and add `dropSpace` and `strip` to `Instrumented.Data.ByteString.Char8`](https://github.com/haskell/bytestring/pull/121)
+ * [Add `findIndexEnd` to `Instrumented.Data.ByteString` and `Instrumented.Data.ByteString.Lazy`](https://github.com/haskell/bytestring/pull/155)
+ * [Add `partition` to `Instrumented.Data.ByteString.Char8` and `Instrumented.Data.ByteString.Lazy.Char8`](https://github.com/haskell/bytestring/pull/251)
  * [Add `IsList` instances for strict and lazy `ByteString` and for `ShortByteString`](https://github.com/haskell/bytestring/pull/219)
- * [Add `createUptoN'` and `unsafeCreateUptoN'` to `Data.ByteString.Internal`](https://github.com/haskell/bytestring/pull/245)
- * [Add `boundedPrim` to `Data.ByteString.Builder.Prim.Internal` and deprecate `boudedPrim`](https://github.com/haskell/bytestring/pull/246)
- * [Deprecate the `Data.ByteString.Lazy.Builder` and `Data.ByteString.Lazy.Builder.{ASCII,Extras}` modules](https://github.com/haskell/bytestring/pull/250)
- * [Fix documented complexity of `Data.ByteString.Lazy.length`](https://github.com/haskell/bytestring/pull/255)
+ * [Add `createUptoN'` and `unsafeCreateUptoN'` to `Instrumented.Data.ByteString.Internal`](https://github.com/haskell/bytestring/pull/245)
+ * [Add `boundedPrim` to `Instrumented.Data.ByteString.Builder.Prim.Internal` and deprecate `boudedPrim`](https://github.com/haskell/bytestring/pull/246)
+ * [Deprecate the `Instrumented.Data.ByteString.Lazy.Builder` and `Instrumented.Data.ByteString.Lazy.Builder.{ASCII,Extras}` modules](https://github.com/haskell/bytestring/pull/250)
+ * [Fix documented complexity of `Instrumented.Data.ByteString.Lazy.length`](https://github.com/haskell/bytestring/pull/255)
  * [Assorted documentation fixes](https://github.com/haskell/bytestring/pull/248)
 
 [0.10.12.0]: https://github.com/haskell/bytestring/compare/0.10.10.1...0.10.12.0

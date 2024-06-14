@@ -23,20 +23,20 @@ import           Prelude                               hiding (words)
 import qualified Data.List                             as List
 import           Control.DeepSeq
 
-import qualified Data.ByteString                       as S
-import qualified Data.ByteString.Char8                 as S8
-import qualified Data.ByteString.Lazy                  as L
-import qualified Data.ByteString.Lazy.Char8            as L8
+import qualified Instrumented.Data.ByteString                       as S
+import qualified Instrumented.Data.ByteString.Char8                 as S8
+import qualified Instrumented.Data.ByteString.Lazy                  as L
+import qualified Instrumented.Data.ByteString.Lazy.Char8            as L8
 
-import           Data.ByteString.Builder
-import           Data.ByteString.Builder.Extra         (byteStringCopy,
+import           Instrumented.Data.ByteString.Builder
+import           Instrumented.Data.ByteString.Builder.Extra         (byteStringCopy,
                                                         byteStringInsert,
                                                         intHost)
-import           Data.ByteString.Builder.Internal      (ensureFree)
-import           Data.ByteString.Builder.Prim          (BoundedPrim, FixedPrim,
+import           Instrumented.Data.ByteString.Builder.Internal      (ensureFree)
+import           Instrumented.Data.ByteString.Builder.Prim          (BoundedPrim, FixedPrim,
                                                         (>$<))
-import qualified Data.ByteString.Builder.Prim          as P
-import qualified Data.ByteString.Builder.Prim.Internal as PI
+import qualified Instrumented.Data.ByteString.Builder.Prim          as P
+import qualified Instrumented.Data.ByteString.Builder.Prim.Internal as PI
 
 import           Foreign
 
@@ -255,7 +255,7 @@ smallTraversalInput = S8.pack "The quick brown fox"
 main :: IO ()
 main = do
   defaultMain
-    [ bgroup "Data.ByteString.Builder"
+    [ bgroup "Instrumented.Data.ByteString.Builder"
       [ bgroup "Small payload"
         [ benchB' "mempty"        ()  (const mempty)
         , benchB' "ensureFree 8"  ()  (const (ensureFree 8))
@@ -299,7 +299,7 @@ main = do
         ]
       ]
 
-    , bgroup "Data.ByteString.Builder.Prim"
+    , bgroup "Instrumented.Data.ByteString.Builder.Prim"
       [ benchFE "char7"      $ toEnum       >$< P.char7
       , benchFE "char8"      $ toEnum       >$< P.char8
       , benchBE "charUtf8"   $ toEnum       >$< P.charUtf8
@@ -347,7 +347,7 @@ main = do
       , benchFE "doubleHost" $ fromIntegral >$< P.doubleHost
       ]
 
-    , bgroup "Data.ByteString.Builder.Prim.ASCII"
+    , bgroup "Instrumented.Data.ByteString.Builder.Prim.ASCII"
       [
       -- decimal number
         benchBE "int8Dec"     $ fromIntegral >$< P.int8Dec

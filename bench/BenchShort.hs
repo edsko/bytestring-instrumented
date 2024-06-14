@@ -14,18 +14,18 @@ import           Data.String
 import           Test.Tasty.Bench
 import           Prelude                               hiding (words, head, tail)
 
-import           Data.ByteString.Short                 (ShortByteString)
-import qualified Data.ByteString.Short                 as S
+import           Instrumented.Data.ByteString.Short                 (ShortByteString)
+import qualified Instrumented.Data.ByteString.Short                 as S
 
-import           Data.ByteString.Builder
-import           Data.ByteString.Builder.Extra         (byteStringCopy,
+import           Instrumented.Data.ByteString.Builder
+import           Instrumented.Data.ByteString.Builder.Extra         (byteStringCopy,
                                                         byteStringInsert,
                                                         intHost)
-import           Data.ByteString.Builder.Internal      (ensureFree)
-import           Data.ByteString.Builder.Prim          (BoundedPrim, FixedPrim,
+import           Instrumented.Data.ByteString.Builder.Internal      (ensureFree)
+import           Instrumented.Data.ByteString.Builder.Prim          (BoundedPrim, FixedPrim,
                                                         (>$<))
-import qualified Data.ByteString.Builder.Prim          as P
-import qualified Data.ByteString.Builder.Prim.Internal as PI
+import qualified Instrumented.Data.ByteString.Builder.Prim          as P
+import qualified Instrumented.Data.ByteString.Builder.Prim.Internal as PI
 
 import           Foreign
 

@@ -3,9 +3,9 @@
 module IsValidUtf8 (testSuite) where
 
 import Data.Bits (shiftR, (.&.), shiftL)
-import Data.ByteString (ByteString)
-import qualified Data.ByteString.Short as SBS
-import qualified Data.ByteString as B
+import Instrumented.Data.ByteString (ByteString)
+import qualified Instrumented.Data.ByteString.Short as SBS
+import qualified Instrumented.Data.ByteString as B
 import Data.Char (chr, ord)
 import Data.Word (Word8)
 import Control.Monad (guard)
